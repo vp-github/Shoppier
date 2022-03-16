@@ -1,0 +1,83 @@
+let result = await fetch("http://localhost:5000/register", {
+  method: "post",
+  body: JSON.stringify({ name, email }),
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+result = await result.json();
+console.warn(result);
+if (result) {
+  alert("Data saved successfully");
+  setEmail("");
+  setName("");
+}
+import React, { useState, useEffect } from "react";
+import "./AdminLogin.css";
+import { useNavigate } from "react-router-dom";
+import * as ROUTES from "./../../../constants/routes";
+
+function AdminLogin() {
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  let error;
+  const history = useNavigate();
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    // if (emailAddress === "hello@email.com" && password.length > 5) {
+    //   history(ROUTES.DASHBOARD);
+    // } else {
+    //   setError("Please Check Your Credentials!!!");
+    // }
+    let result = await fetch("http://localhost:3000/login-admin", {
+      method: "post",
+      body: JSON.stringify({ emailAddress, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    result = await result.json();
+    console.warn(result);
+    if (result) {
+      alert("Data saved successfully");
+      setEmailAddress("");
+      setPassword("");
+    }
+  };
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
+
+  return (
+    <div className="admin-box">
+      <form className="form-div" onSubmit={submitHandler}>
+        <div className="header">
+          <h1>Admin Login</h1>
+        </div>
+
+        <div className="email-div">
+          <label>EMAIL ADDRESS</label>
+          <input
+            type="email"
+            onChange={(e) => setEmailAddress(e.target.value)}
+            required
+          ></input>
+        </div>
+        <div className="password-div">
+          <label>PASSWORD</label>
+          <input
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          ></input>
+        </div>
+        <div className="submit-div">
+          <button className="submit-btn">LOGIN</button>
+        </div>
+      </form>
+      <h4>{error}</h4>
+    </div>
+  );
+}
+export default AdminLogin;
